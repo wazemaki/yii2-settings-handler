@@ -64,9 +64,9 @@ class SettingsHandler extends Component
     /**
      * Internal storage for loaded values
      * 
-     * @var array|null
+     * @var array
      */
-    private $_values = null;
+    private $_values = [];
 
     /**
      * @inheritdoc
@@ -121,6 +121,28 @@ class SettingsHandler extends Component
         // Don't allow saving if definition doesn't exist
         if (!isset($this->definitions[$key])) {
             return false;
+        }
+
+        if ($value === null) {
+            return $this->delete($key);
+        }
+        if(($this->definitions[$key]['emptyMeansDefault'] ?? false) && ($value === '' || $value === null)) {
+            return $this->delete($key);
+        }
+        if($is_bool = ($this->definitions[$key]['dataType'] ?? '') === 'boolean') {
+            $value = $value ? '1' : '0';
+        }
+        if($this->definitions[$key]['dataType'] ?? '' === 'integer') {
+            $value = (int)$value;
+        }
+        if($this->definitions[$key]['dataType'] ?? '' === 'float') {
+            $value = (float)$value;
+        }
+        if($this->definitions[$key]['dataType'] ?? '' === 'string') {
+            $value = (string)$value;
+        }
+        if($this->definitions[$key]['dataType'] ?? '' === 'array' && is_array($value)) {
+            $value = json_encode($value);
         }
         
         // Database save (UPSERT logic)

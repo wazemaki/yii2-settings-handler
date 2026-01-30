@@ -153,8 +153,8 @@ class SettingsController extends Controller
                         $value = (bool)$value;
                     }
                     
-                    // Get current value from database
-                    $currentValue = $currentValues[$key] ?? ($def['defaultValue'] ?? null);
+                    // Get current value from database (only what's actually stored)
+                    $currentValue = $currentValues[$key] ?? null;
                     
                     // Cast current value to same type for comparison
                     if (($def['dataType'] ?? '') === 'boolean') {

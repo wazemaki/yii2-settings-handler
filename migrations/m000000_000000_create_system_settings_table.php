@@ -22,8 +22,7 @@ class m000000_000000_create_system_settings_table extends Migration
         $this->createTable('{{%system_settings}}', [
             'id' => $this->primaryKey(),
             'key_name' => $this->string(100)->notNull()->unique(),
-            'value' => $this->text(),
-            'description' => $this->string(500),
+            'value' => $this->text()->null(),
             'created_at' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
             'updated_at' => $this->timestamp()->null(),
         ], $tableOptions);
