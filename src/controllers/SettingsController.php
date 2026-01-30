@@ -19,9 +19,13 @@ use yii\filters\AccessControl;
 class SettingsController extends Controller
 {
     /**
-     * @var string the view path for this controller
+     * @inheritdoc
      */
-    public $viewPath = '@vendor/wazemaki/yii2-settings-handler/src/views';
+    public function init()
+    {
+        parent::init();
+        $this->viewPath = dirname(__DIR__) . '/views';
+    }
     
     /**
      * @inheritdoc
