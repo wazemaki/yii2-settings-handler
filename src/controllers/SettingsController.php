@@ -118,6 +118,9 @@ class SettingsController extends Controller
             $settingsData = $model->attributes;
             $resetData = Yii::$app->request->post('settings-reset', []);
             
+            // Get current values from database
+            $currentValues = $settings->getAllFromDb();
+            
             $successCount = 0;
             $resetCount = 0;
             
@@ -150,8 +153,25 @@ class SettingsController extends Controller
                         $value = (bool)$value;
                     }
                     
-                    if ($settings->set($key, $value)) {
-                        $successCount++;
+                    // Get current value from database
+                    $currentValue = $currentValues[$key] ?? ($def['defaultValue'] ?? null);
+                    
+                    // Cast current value to same type for comparison
+                    if (($def['dataType'] ?? '') === 'boolean') {
+                        $currentValue = (bool)$currentValue;
+                    } elseif (($def['dataType'] ?? '') === 'integer') {
+                        $currentValue = (int)$currentValue;
+                    } elseif (($def['dataType'] ?? '') === 'float') {
+                        $currentValue = (float)$currentValue;
+                    } else {
+                        $currentValue = (string)$currentValue;
+                    }
+                    
+                    // Only save if value has changed
+                    if ($value !== $currentValue) {
+                        if ($settings->set($key, $value)) {
+                            $successCount++;
+                        }
                     }
                 }
             }
