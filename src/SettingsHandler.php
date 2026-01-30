@@ -129,6 +129,7 @@ class SettingsHandler extends Component
         if(($this->definitions[$key]['emptyMeansDefault'] ?? false) && ($value === '' || $value === null)) {
             return $this->delete($key);
         }
+
         if($this->definitions[$key]['dataType'] ?? '' === 'boolean') {
             $value = $value ? 1 : 0;
         }
@@ -138,12 +139,10 @@ class SettingsHandler extends Component
         if($this->definitions[$key]['dataType'] ?? '' === 'float') {
             $value = (float)$value;
         }
-        if($this->definitions[$key]['dataType'] ?? '' === 'string') {
-            $value = (string)$value;
-        }
         if($this->definitions[$key]['dataType'] ?? '' === 'array' && is_array($value)) {
             $value = json_encode($value);
         }
+        $value = (string)$value;
         
         // Database save (UPSERT logic)
         $db = Yii::$app->db;
