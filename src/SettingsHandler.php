@@ -130,7 +130,7 @@ class SettingsHandler extends Component
             return $this->delete($key);
         }
         if($is_bool = ($this->definitions[$key]['dataType'] ?? '') === 'boolean') {
-            $value = $value ? '1' : '0';
+            $value = $value ? 1 : 0;
         }
         if($this->definitions[$key]['dataType'] ?? '' === 'integer') {
             $value = (int)$value;
@@ -157,7 +157,7 @@ class SettingsHandler extends Component
         if ($exists) {
             $success = $db->createCommand()
                 ->update($this->tableName, [
-                    'value' => (string)$value, 
+                    'value' => $value, 
                     'updated_at' => date('Y-m-d H:i:s')
                 ], ['key_name' => $key])
                 ->execute();
@@ -165,7 +165,7 @@ class SettingsHandler extends Component
             $success = $db->createCommand()
                 ->insert($this->tableName, [
                     'key_name' => $key,
-                    'value' => (string)$value,
+                    'value' => $value,
                 ])
                 ->execute();
         }
