@@ -19,6 +19,11 @@ use yii\filters\AccessControl;
 class SettingsController extends Controller
 {
     /**
+     * @var string the view path for this controller
+     */
+    public $viewPath = '@vendor/wazemaki/yii2-settings-handler/src/views';
+    
+    /**
      * @inheritdoc
      * 
      * Default: Allow all authenticated users.
