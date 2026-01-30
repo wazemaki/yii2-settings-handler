@@ -129,7 +129,7 @@ class SettingsHandler extends Component
         if(($this->definitions[$key]['emptyMeansDefault'] ?? false) && ($value === '' || $value === null)) {
             return $this->delete($key);
         }
-        if($is_bool = ($this->definitions[$key]['dataType'] ?? '') === 'boolean') {
+        if($this->definitions[$key]['dataType'] ?? '' === 'boolean') {
             $value = $value ? 1 : 0;
         }
         if($this->definitions[$key]['dataType'] ?? '' === 'integer') {
