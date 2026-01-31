@@ -59,7 +59,7 @@ Yii::$app->settings->set('site_name', 'My Site');
 Yii::$app->settings->delete('site_name');
 
 // Clear settings cache
-Yii::$app->cache->delete('settings_handler_');
+Yii::$app->settings->deleteCache();
 ```
 
 ## Definition Options

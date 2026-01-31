@@ -130,19 +130,7 @@ class SettingsHandler extends Component
             return $this->delete($key);
         }
 
-        if($this->definitions[$key]['dataType'] ?? '' === 'boolean') {
-            $value = $value ? 1 : 0;
-        }
-        if($this->definitions[$key]['dataType'] ?? '' === 'integer') {
-            $value = (int)$value;
-        }
-        if($this->definitions[$key]['dataType'] ?? '' === 'float') {
-            $value = (float)$value;
-        }
-        if($this->definitions[$key]['dataType'] ?? '' === 'array' && is_array($value)) {
-            $value = json_encode($value);
-        }
-        $value = (string)$value;
+        $value = $this->castValue($key, $value);
         
         // Database save (UPSERT logic)
         $db = Yii::$app->db;
@@ -171,7 +159,7 @@ class SettingsHandler extends Component
 
         if ($success) {
             // Clear cache and update internal array
-            Yii::$app->cache->delete($this->cacheKey);
+            $this->deleteCache();
             $this->_values[$key] = $value;
         }
 
@@ -192,7 +180,7 @@ class SettingsHandler extends Component
 
         if ($success || !isset($this->_values[$key])) {
             // Clear cache
-            Yii::$app->cache->delete($this->cacheKey);
+            $this->deleteCache();
             // Update internal array
             unset($this->_values[$key]);
             return true;
@@ -248,11 +236,7 @@ class SettingsHandler extends Component
      */
     protected function castValue($key, $value)
     {
-        if (!isset($this->definitions[$key]['dataType'])) {
-            return $value;
-        }
-
-        switch ($this->definitions[$key]['dataType']) {
+        switch ($this->definitions[$key]['dataType'] ?? null) {
             case 'integer':
             case 'int':
                 return (int)$value;
@@ -261,8 +245,19 @@ class SettingsHandler extends Component
                 return (bool)$value;
             case 'float':
                 return (float)$value;
-            default:
+            case 'array':
+            case 'json':
+                if(is_string($value)) {
+                    return json_decode($value, true);
+                }
                 return $value;
+            default:
+                return (string)$value;
         }
+    }
+
+    public function deleteCache()
+    {
+        Yii::$app->cache->delete($this->cacheKey);
     }
 }
