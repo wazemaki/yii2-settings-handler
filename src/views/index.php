@@ -191,7 +191,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     if (type === 'checkbox') {
                         input.checked = defaultValue === '1';
                     } else {
-                        input.value = '';
+                        input.value = defaultValue || '';
                     }
                 } else {
                     // Uncheck - restore previous value
