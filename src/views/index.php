@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 $hint = '';
                 if (isset($def['hint'])) {
-                    $hint = '<small class="text-muted">' . Html::encode($def['hint']) . '</small>';
+                    $hint = '<small class="text-muted">' . $def['hint'] . '</small>';
                 }
                 
                 if ($inputType === 'checkbox') {
