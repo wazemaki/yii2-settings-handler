@@ -89,9 +89,14 @@ $this->params['breadcrumbs'][] = $this->title;
                         break;
                         
                     case 'password':
+                        echo '<div class="password-wrapper position-relative">';
                         echo $field->passwordInput([
-                            'class' => 'form-control setting-input',
+                            'class' => 'form-control setting-input password-input',
                         ])->hint($hint);
+                        echo '<span class="password-toggle-icon position-absolute" style="right: 10px; top: 8px; cursor: pointer;">';
+                        echo '<i class="fas fa-eye"></i>';
+                        echo '</span>';
+                        echo '</div>';
                         break;
                         
                     case 'select':
@@ -160,10 +165,42 @@ $this->params['breadcrumbs'][] = $this->title;
     .reset-label.is-checked {
         color: var(--bs-body-color, #fff);
     }
+
+    .password-wrapper {
+        position: relative;
+    }
+
+    .password-toggle-icon {
+        z-index: 10;
+        user-select: none;
+    }
+
+    .password-toggle-icon:hover {
+        opacity: 0.7;
+    }
 </style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Password toggle functionality
+        document.querySelectorAll('.password-toggle-icon').forEach(icon => {
+            icon.addEventListener('click', function() {
+                const wrapper = this.closest('.password-wrapper');
+                const input = wrapper.querySelector('.password-input');
+                const eyeIcon = this.querySelector('i');
+                
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    eyeIcon.classList.remove('fa-eye');
+                    eyeIcon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    eyeIcon.classList.remove('fa-eye-slash');
+                    eyeIcon.classList.add('fa-eye');
+                }
+            });
+        });
+
         // Reset checkbox behavior
         document.querySelectorAll('.reset-checkbox').forEach(resetCheckbox => {
             const label = document.querySelector('label[for="' + resetCheckbox.id + '"]');
