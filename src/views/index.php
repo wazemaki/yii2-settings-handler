@@ -8,7 +8,7 @@ use kartik\select2\Select2;
 /* @var $model yii\base\DynamicModel */
 /* @var $definitions array */
 
-$this->title = 'System Settings';
+$this->title = 'Rendszerbeállítások';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 // If emptyMeansDefault = true, show default in placeholder
                 if (!$placeholder && $emptyMeansDefault && $hasDefault) {
-                    $placeholder = "Default: $defaultValue";
+                    $placeholder = "Alapértelmezett: $defaultValue";
                 }
 
                 $hint = '';
@@ -46,9 +46,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 
                 if ($hasDefault) {
                     if ($emptyMeansDefault) {
-                        $hint .= '<br><small class="text-muted">Empty value will use default: ' . Html::encode($defaultValueShow) . '</small>';
+                        $hint .= '<br><small class="text-muted">Üres érték esetén az alapértelmezett lesz használva: ' . Html::encode($defaultValueShow) . '</small>';
                     } else {
-                        $hint .= '<br><small class="text-muted">Default value: ' . Html::encode($defaultValueShow) . '</small>';
+                        $hint .= '<br><small class="text-muted">Alapértelmezett érték: ' . Html::encode($defaultValueShow) . '</small>';
                     }
                 }
 
@@ -107,7 +107,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data' => $options,
                             'theme' => Select2::THEME_BOOTSTRAP,
                             'options' => [
-                                'placeholder' => 'Select...',
+                                'placeholder' => 'Válassz...',
                                 'class' => 'setting-input',
                             ],
                             'pluginOptions' => [
@@ -133,7 +133,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'style' => 'display: none;'
                     ]);
                     echo '<label class="form-check-label reset-label" for="settings-reset_' . $key . '">';
-                    echo '<small><i class="fas fa-undo"></i> Reset to default (' . $defaultValueShow . ')</small>';
+                    echo '<small><i class="fas fa-undo"></i> Visszaállítás alapértelmezettre (' . $defaultValueShow . ')</small>';
                     echo '</label>';
                 }
                 ?>
@@ -142,8 +142,8 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <div class="form-group mt-4">
-        <?= Html::submitButton('Save Settings', ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Clear Cache', ['clear-cache'], ['class' => 'btn btn-warning ms-3']) ?>
+        <?= Html::submitButton('Beállítások mentése', ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Cache törlése', ['clear-cache'], ['class' => 'btn btn-warning ms-3']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

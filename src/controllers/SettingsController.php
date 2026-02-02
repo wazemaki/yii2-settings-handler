@@ -153,13 +153,13 @@ class SettingsController extends Controller
             
             $message = [];
             if ($successCount > 0) {
-                $message[] = "$successCount setting(s) saved";
+                $message[] = "$successCount beállítás mentve";
             }
             if ($resetCount > 0) {
-                $message[] = "$resetCount reset to default";
+                $message[] = "$resetCount visszaállítva alapértelmezettre";
             }
             
-            Yii::$app->session->setFlash('success', implode(', ', $message) ?: 'No changes.');
+            Yii::$app->session->setFlash('success', implode(', ', $message) ?: 'Nincs változtatás.');
             return $this->refresh();
         }
 
@@ -180,7 +180,7 @@ class SettingsController extends Controller
     public function actionClearCache()
     {
         Yii::$app->cache->flush();
-        Yii::$app->session->setFlash('success', 'Cache cleared successfully.');
+        Yii::$app->session->setFlash('success', 'Cache sikeresen törölve.');
         return $this->redirect(['index']);
     }
 }
