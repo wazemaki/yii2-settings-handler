@@ -68,6 +68,8 @@ class SettingsHandler extends Component
      */
     private $_values = [];
 
+    public $saveOnlyDefined = true; // Only allow saving keys that are defined in $definitions
+
     /**
      * @inheritdoc
      */
@@ -119,7 +121,7 @@ class SettingsHandler extends Component
     public function set($key, $value)
     {
         // Don't allow saving if definition doesn't exist
-        if (!isset($this->definitions[$key])) {
+        if ($this->saveOnlyDefined && !isset($this->definitions[$key])) {
             return false;
         }
 
