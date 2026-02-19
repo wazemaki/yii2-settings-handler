@@ -118,7 +118,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     /* Tab styles */
     .nav-tabs {
-        border-bottom: 2px solid var(--bs-secondary-color);
+        border-bottom: 1px solid var(--bs-secondary-color);
     }
 
     .nav-tabs .nav-link {
