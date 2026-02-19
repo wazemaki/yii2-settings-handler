@@ -118,11 +118,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
     /* Tab styles */
     .nav-tabs {
-        border-bottom: 2px solid #dee2e6;
+        border-bottom: 2px solid var(--bs-secondary-color);
     }
 
     .nav-tabs .nav-link {
-        color: #6c757d;
+        color: var(--bs-secondary-color);
         border: none;
         border-bottom: 3px solid transparent;
         padding: 0.5rem 1rem;
@@ -131,11 +131,13 @@ $this->params['breadcrumbs'][] = $this->title;
     }
 
     .nav-tabs .nav-link:hover {
-        color: #495057;
-        border-bottom-color: #e9ecef;
+        border-color: var(--bs-primary);
+        color: var(--bs-primary);
     }
 
     .nav-tabs .nav-link.active {
         background-color: transparent;
+        border-color: var(--bs-primary);
+        color: var(--bs-primary);
     }
 </style>
