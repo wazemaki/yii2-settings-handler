@@ -6,8 +6,7 @@ use yii\web\AssetBundle;
 
 class SettingsAsset extends AssetBundle
 {
-    public $basePath = '@vendor/wazemaki/yii2-settings-handler/web';
-    public $baseUrl = '@web';
+    public $sourcePath = '@vendor/wazemaki/yii2-settings-handler/web';
     
     public $js = [
         'js/settings.js',
