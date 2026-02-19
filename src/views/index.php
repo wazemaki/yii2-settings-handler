@@ -73,6 +73,3 @@ $this->params['breadcrumbs'][] = $this->title;
         opacity: 0.7;
     }
 </style>
-
-                        
-                    case 'checkbox':
