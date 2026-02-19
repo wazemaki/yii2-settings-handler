@@ -136,8 +136,6 @@ $this->params['breadcrumbs'][] = $this->title;
     }
 
     .nav-tabs .nav-link.active {
-        color: #0d6efd;
-        border-bottom-color: #0d6efd;
         background-color: transparent;
     }
 </style>
