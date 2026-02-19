@@ -71,6 +71,14 @@ class SettingsHandler extends Component
     public $saveOnlyDefined = true; // Only allow saving keys that are defined in $definitions
 
     /**
+     * Enable tab mode for delimiter sections
+     * If true, delimiters will create tabs instead of inline section headers
+     * 
+     * @var bool
+     */
+    public $enableTabs = false;
+
+    /**
      * @inheritdoc
      */
     public function init()
@@ -261,5 +269,45 @@ class SettingsHandler extends Component
     public function deleteCache()
     {
         Yii::$app->cache->delete($this->cacheKey);
+    }
+
+    /**
+     * Get delimiter sections from definitions
+     * 
+     * @return array Array of delimiter keys
+     */
+    public function getDelimiters()
+    {
+        $delimiters = [];
+        foreach ($this->definitions as $key => $def) {
+            if (($def['inputType'] ?? '') === 'delimiter') {
+                $delimiters[] = $key;
+            }
+        }
+        return $delimiters;
+    }
+
+    /**
+     * Group settings by delimiter sections
+     * Returns array where keys are delimiter keys and values are arrays of setting keys
+     * 
+     * @return array
+     */
+    public function getGroupedByDelimiter()
+    {
+        $groups = [];
+        $currentGroup = '__default__';
+        $groups[$currentGroup] = [];
+
+        foreach ($this->definitions as $key => $def) {
+            if (($def['inputType'] ?? '') === 'delimiter') {
+                $currentGroup = $key;
+                $groups[$currentGroup] = [];
+            } else {
+                $groups[$currentGroup][] = $key;
+            }
+        }
+
+        return $groups;
     }
 }

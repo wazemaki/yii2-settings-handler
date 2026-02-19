@@ -166,9 +166,34 @@ class SettingsController extends Controller
         // Load current values
         $model->load($settings->getAllFromDb(), '');
 
-        return $this->render('index', [
+        // Determine which view and tab to use
+        $viewFile = 'index';
+        $activeTab = null;
+        $groupedByDelimiter = [];
+        
+        if ($settings->enableTabs) {
+            $viewFile = 'index-tabs';
+            $groupedByDelimiter = $settings->getGroupedByDelimiter();
+            $delimiters = $settings->getDelimiters();
+            
+            // Get active tab from GET parameter
+            $requestedTab = Yii::$app->request->get('tab');
+            
+            if ($requestedTab && isset($definitions[$requestedTab])) {
+                $activeTab = $requestedTab;
+            } elseif (!empty($delimiters)) {
+                // Default to first delimiter
+                $activeTab = $delimiters[0];
+            } else {
+                $activeTab = '__default__';
+            }
+        }
+
+        return $this->render($viewFile, [
             'model' => $model,
             'definitions' => $definitions,
+            'groupedByDelimiter' => $groupedByDelimiter,
+            'activeTab' => $activeTab,
         ]);
     }
 
