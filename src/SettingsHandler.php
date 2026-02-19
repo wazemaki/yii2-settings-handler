@@ -147,15 +147,23 @@ class SettingsHandler extends Component
         
         // Database save (UPSERT logic)
         $db = Yii::$app->db;
-        $oldValue = (new Query())
-                ->select('value')
+        $exists = (new Query())
             ->from($this->tableName)
             ->where(['key_name' => $key])
-            ->scalar();
+            ->exists();
 
         $success = false;
 
-        if ($oldValue !== null) {
+        if ($exists) {
+            $oldValue = (new Query())
+                ->select('value')
+                ->from($this->tableName)
+                ->where(['key_name' => $key])
+                ->scalar();
+            if ($oldValue === $value) {
+                return true; // No change, no update needed
+            }
+            
             $success = $db->createCommand()
                 ->update($this->tableName, [
                     'value' => $value, 
