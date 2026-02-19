@@ -118,8 +118,8 @@ class SettingsController extends Controller
             $settingsData = $model->attributes;
             $resetData = Yii::$app->request->post('settings-reset', []);
             
-            $successCount = 0;
-            $resetCount = 0;
+            $settings->clearModifiedCount();
+            $settings->clearDefaultValuesCount();
             
             foreach ($definitions as $key => $def) {
                 if ($def['inputType'] === 'delimiter') {
@@ -128,30 +128,19 @@ class SettingsController extends Controller
                 
                 // If reset checkbox is checked, delete from database
                 if (isset($resetData[$key]) && $resetData[$key]) {
-                    if ($settings->delete($key)) {
-                        $resetCount++;
-                    }
+                    $settings->delete($key);
                     continue;
                 }
                 
                 if (isset($settingsData[$key])) {
                     $value = $settingsData[$key];
-                    
-                    // If empty and emptyMeansDefault = true, delete (use default)
-                    if ($value === '' && ($def['emptyMeansDefault'] ?? false)) {
-                        if ($settings->delete($key)) {
-                            $resetCount++;
-                        }
-                        continue;
-                    }
-                    
-                    if ($settings->set($key, $value)) {
-                        $successCount++;
-                    }
+                    $settings->set($key, $value);
                 }
             }
             
             $message = [];
+            $successCount = $settings->getModifiedCount();
+            $resetCount = $settings->getDefaultValuesCount();
             if ($successCount > 0) {
                 $message[] = "$successCount beállítás mentve";
             }
@@ -159,7 +148,7 @@ class SettingsController extends Controller
                 $message[] = "$resetCount visszaállítva alapértelmezettre";
             }
             
-            Yii::$app->session->setFlash('success', implode(', ', $message) ?: 'Nincs változtatás.');
+            Yii::$app->session->addFlash('success', implode(', ', $message) ?: 'Nincs változtatás.');
             return $this->refresh();
         }
 

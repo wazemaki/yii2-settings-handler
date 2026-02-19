@@ -78,6 +78,9 @@ class SettingsHandler extends Component
      */
     public $enableTabs = false;
 
+    private $modifiedCount = 0;
+    private $defaultValuesCount = 0;
+
     /**
      * @inheritdoc
      */
@@ -133,10 +136,10 @@ class SettingsHandler extends Component
             return false;
         }
 
-        if ($value === null) {
+        if(($this->definitions[$key]['emptyMeansDefault'] ?? false) && ($value === '' || $value === null)) {
             return $this->delete($key);
         }
-        if(($this->definitions[$key]['emptyMeansDefault'] ?? false) && ($value === '' || $value === null)) {
+        if ($value === null) {
             return $this->delete($key);
         }
 
@@ -144,20 +147,24 @@ class SettingsHandler extends Component
         
         // Database save (UPSERT logic)
         $db = Yii::$app->db;
-        $exists = (new Query())
+        $oldValue = (new Query())
+                ->select('value')
             ->from($this->tableName)
             ->where(['key_name' => $key])
-            ->exists();
+            ->scalar();
 
         $success = false;
 
-        if ($exists) {
+        if ($oldValue !== null) {
             $success = $db->createCommand()
                 ->update($this->tableName, [
                     'value' => $value, 
                     'updated_at' => date('Y-m-d H:i:s')
                 ], ['key_name' => $key])
                 ->execute();
+            if ($success && $oldValue != $value) {
+                $this->modifiedCount++;
+            }
         } else {
             $success = $db->createCommand()
                 ->insert($this->tableName, [
@@ -165,6 +172,9 @@ class SettingsHandler extends Component
                     'value' => $value,
                 ])
                 ->execute();
+            if ($success) {
+                $this->modifiedCount++;
+            }
         }
 
         if ($success) {
@@ -188,6 +198,12 @@ class SettingsHandler extends Component
             ->delete($this->tableName, ['key_name' => $key])
             ->execute();
 
+        if ($success) {
+            $this->modifiedCount++;
+        } elseif (isset($this->definitions[$key]['defaultValue'])) {
+            $this->defaultValuesCount++;
+        }
+
         if ($success || !isset($this->_values[$key])) {
             // Clear cache
             $this->deleteCache();
@@ -197,6 +213,24 @@ class SettingsHandler extends Component
         }
 
         return false;
+    }
+
+    public function clearModifiedCount()
+    {
+        $this->modifiedCount = 0;
+    }
+    public function getModifiedCount(): int
+    {
+        return $this->modifiedCount;
+    }
+
+    public function clearDefaultValuesCount()
+    {
+        $this->defaultValuesCount = 0;
+    }
+    public function getDefaultValuesCount(): int
+    {
+        return $this->defaultValuesCount;
     }
 
     /**
