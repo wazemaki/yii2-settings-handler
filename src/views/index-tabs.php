@@ -15,6 +15,8 @@ SettingsAsset::register($this);
 
 $this->title = 'Rendszerbeállítások';
 $this->params['breadcrumbs'][] = $this->title;
+
+$customView = $definitions[$activeTab]['customViewPath'] ?? null;
 ?>
 
 <div class="settings-index">
@@ -45,50 +47,62 @@ $this->params['breadcrumbs'][] = $this->title;
         </nav>
     <?php endif; ?>
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php if ($customView): ?>
+        <div class="custom-view-container mb-4">
+            <?= $this->render($customView, [
+                'model' => $model,
+                'definitions' => $definitions,
+                'groupedByDelimiter' => $groupedByDelimiter,
+                'activeTab' => $activeTab,
+            ]) ?>
+        </div>
+    <?php else: ?>
 
-    <div class="row">
-        <?php foreach ($definitions as $key => $def): ?>
-            <?php
-            $inputType = $def['inputType'] ?? 'text';
-            
-            // Determine which tab this field belongs to
-            $fieldTabKey = '__default__';
-            foreach ($groupedByDelimiter as $tabKey => $tabSettings) {
-                if (in_array($key, $tabSettings)) {
-                    $fieldTabKey = $tabKey;
-                    break;
+        <?php $form = ActiveForm::begin(); ?>
+
+        <div class="row">
+            <?php foreach ($definitions as $key => $def): ?>
+                <?php
+                $inputType = $def['inputType'] ?? 'text';
+                
+                // Determine which tab this field belongs to
+                $fieldTabKey = '__default__';
+                foreach ($groupedByDelimiter as $tabKey => $tabSettings) {
+                    if (in_array($key, $tabSettings)) {
+                        $fieldTabKey = $tabKey;
+                        break;
+                    }
                 }
-            }
 
-            // Skip rendering if this is not the active tab
-            if ($fieldTabKey !== $activeTab) {
-                continue;
-            }
+                // Skip rendering if this is not the active tab
+                if ($fieldTabKey !== $activeTab) {
+                    continue;
+                }
 
-            // Skip delimiter rendering in tab mode
-            if ($inputType === 'delimiter') {
-                continue;
-            }
-            ?>
+                // Skip delimiter rendering in tab mode
+                if ($inputType === 'delimiter') {
+                    continue;
+                }
+                ?>
 
-            <div class="col-12 mb-4">
-                <?= $this->render('_input', [
-                    'form' => $form,
-                    'model' => $model,
-                    'key' => $key,
-                    'def' => $def,
-                ]) ?>
-            </div>
-        <?php endforeach; ?>
-    </div>
+                <div class="col-12 mb-4">
+                    <?= $this->render('_input', [
+                        'form' => $form,
+                        'model' => $model,
+                        'key' => $key,
+                        'def' => $def,
+                    ]) ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
 
-    <div class="form-group mt-4">
-        <?= Html::submitButton('Beállítások mentése', ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Cache törlése', ['clear-cache'], ['class' => 'btn btn-warning ms-3']) ?>
-    </div>
+        <div class="form-group mt-4">
+            <?= Html::submitButton('Beállítások mentése', ['class' => 'btn btn-primary']) ?>
+            <?= Html::a('Cache törlése', ['clear-cache'], ['class' => 'btn btn-warning ms-3']) ?>
+        </div>
 
-    <?php ActiveForm::end(); ?>
+        <?php ActiveForm::end(); ?>
+    <?php endif; ?>
 </div>
 
 <style>

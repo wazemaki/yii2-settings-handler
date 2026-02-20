@@ -72,7 +72,7 @@ class SettingsController extends Controller
         $keys = [];
         foreach ($definitions as $key => $def) {
             $inputType = $def['inputType'] ?? '';
-            if (!in_array($inputType, ['delimiter', 'custom_view'])) {
+            if (!in_array($inputType, ['delimiter'])) {
                 $keys[] = $key;
             }
         }
@@ -82,7 +82,7 @@ class SettingsController extends Controller
         // Build dynamic model with validation rules
         foreach ($definitions as $key => $def) {
             $inputType = $def['inputType'] ?? '';
-            if (in_array($inputType, ['delimiter', 'custom_view'])) {
+            if (in_array($inputType, ['delimiter'])) {
                 continue;
             }
 
@@ -125,7 +125,7 @@ class SettingsController extends Controller
             
             foreach ($definitions as $key => $def) {
                 $inputType = $def['inputType'] ?? '';
-                if (in_array($inputType, ['delimiter', 'custom_view'])) {
+                if (in_array($inputType, ['delimiter'])) {
                     continue;
                 }
                 
