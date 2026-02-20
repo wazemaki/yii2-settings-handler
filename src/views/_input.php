@@ -110,6 +110,28 @@ switch ($inputType) {
         ])->hint($hint);
         break;
         
+    case 'custom_view':
+        // Custom view rendering input type
+        echo '<label class="form-label">' . Html::encode($def['label'] ?? '') . '</label>';
+        
+        $viewPath = $def['viewPath'] ?? null;
+        
+        if (!empty($viewPath)) {
+            try {
+                echo '<div class="custom-view-container">';
+                echo $this->render($viewPath, [
+                    'model' => $model,
+                    'def' => $def,
+                ]);
+                echo '</div>';
+            } catch (\Throwable $e) {
+                echo '<div class="alert alert-danger mt-3" role="alert">';
+                echo '<strong>View hiba:</strong> ' . Html::encode($e->getMessage());
+                echo '</div>';
+            }
+        }
+        break;
+        
     default: // text, email, etc.
         echo $field->input($inputType, [
             'placeholder' => $placeholder,

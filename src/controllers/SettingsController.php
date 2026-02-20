@@ -71,7 +71,8 @@ class SettingsController extends Controller
         // Collect all non-delimiter keys
         $keys = [];
         foreach ($definitions as $key => $def) {
-            if (($def['inputType'] ?? '') !== 'delimiter') {
+            $inputType = $def['inputType'] ?? '';
+            if (!in_array($inputType, ['delimiter', 'custom_view'])) {
                 $keys[] = $key;
             }
         }
@@ -80,7 +81,8 @@ class SettingsController extends Controller
         
         // Build dynamic model with validation rules
         foreach ($definitions as $key => $def) {
-            if ($def['inputType'] === 'delimiter') {
+            $inputType = $def['inputType'] ?? '';
+            if (in_array($inputType, ['delimiter', 'custom_view'])) {
                 continue;
             }
 
@@ -122,7 +124,8 @@ class SettingsController extends Controller
             $settings->clearDefaultValuesCount();
             
             foreach ($definitions as $key => $def) {
-                if ($def['inputType'] === 'delimiter') {
+                $inputType = $def['inputType'] ?? '';
+                if (in_array($inputType, ['delimiter', 'custom_view'])) {
                     continue;
                 }
                 
