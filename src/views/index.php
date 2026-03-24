@@ -17,7 +17,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="settings-index">
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'options' => ['autocomplete' => 'off'],
+    ]); ?>
 
     <div class="row">
         <?php foreach ($definitions as $key => $def): ?>

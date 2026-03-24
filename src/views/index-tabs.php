@@ -58,7 +58,9 @@ $customView = $definitions[$activeTab]['customViewPath'] ?? null;
         </div>
     <?php else: ?>
 
-        <?php $form = ActiveForm::begin(); ?>
+        <?php $form = ActiveForm::begin([
+            'options' => ['autocomplete' => 'off'],
+        ]); ?>
 
         <div class="row">
             <?php foreach ($definitions as $key => $def): ?>

@@ -1,7 +1,6 @@
 <?php
 
 use yii\helpers\Html;
-use yii\bootstrap5\ActiveForm;
 use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
@@ -71,6 +70,7 @@ switch ($inputType) {
             Html::activeCheckbox($model, $key, [
                 'class' => 'toggle-switch-input setting-input',
                 'label' => false,
+                'autocomplete' => 'off',
             ]) . Html::tag('span', '', ['class' => 'toggle-switch-slider']),
             ['class' => 'toggle-switch d-block mb-2']
         );
@@ -85,6 +85,7 @@ switch ($inputType) {
             'rows' => 4,
             'placeholder' => $placeholder,
             'class' => 'form-control setting-input',
+            'autocomplete' => 'off',
         ])->hint($hint);
         break;
         
@@ -92,6 +93,7 @@ switch ($inputType) {
         echo $field->input('number', [
             'placeholder' => $placeholder,
             'class' => 'form-control setting-input',
+            'autocomplete' => 'off',
         ])->hint($hint);
         break;
         
@@ -99,6 +101,7 @@ switch ($inputType) {
         echo '<div class="password-wrapper position-relative">';
         echo $field->passwordInput([
             'class' => 'form-control setting-input password-input',
+            'autocomplete' => 'new-password',
         ])->hint($hint);
         echo '<span class="password-toggle-icon position-absolute" style="right: 10px; top: 8px; cursor: pointer;">';
         echo '<i class="fas fa-eye"></i>';
@@ -121,6 +124,7 @@ switch ($inputType) {
             'options' => [
                 'placeholder' => 'Válassz...',
                 'class' => 'setting-input',
+                'autocomplete' => 'off',
             ],
             'pluginOptions' => [
                 'allowClear' => true
@@ -133,6 +137,7 @@ switch ($inputType) {
         echo $field->input($inputType, [
             'placeholder' => $placeholder,
             'class' => 'form-control setting-input',
+            'autocomplete' => 'off',
         ])->hint($hint);
 }
 
