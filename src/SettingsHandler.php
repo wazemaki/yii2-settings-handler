@@ -143,7 +143,15 @@ class SettingsHandler extends Component
             return $this->delete($key);
         }
 
-        $value = $this->castValue($key, $value);
+        // Array/json-backed settings (e.g. multiselect) must be JSON-encoded
+        // for storage - castValue() below only decodes JSON strings for
+        // reading, it never encodes a PHP array back into a string.
+        $dataType = $this->definitions[$key]['dataType'] ?? null;
+        if (in_array($dataType, ['array', 'json'], true)) {
+            $value = is_string($value) ? $value : json_encode($value);
+        } else {
+            $value = $this->castValue($key, $value);
+        }
         
         // Database save (UPSERT logic)
         $db = Yii::$app->db;

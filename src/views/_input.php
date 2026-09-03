@@ -8,6 +8,8 @@ use kartik\select2\Select2;
 /* @var $model yii\base\DynamicModel */
 /* @var $key string */
 /* @var $def array */
+/* @var $model yii\base\DynamicModel */
+/* @var $form yii\bootstrap5\ActiveForm */
 
 $inputType = $def['inputType'] ?? 'text';
 $isDefault = \Yii::$app->settings->isDefault($key);
@@ -30,6 +32,8 @@ if (isset($def['hint'])) {
 
 if ($inputType === 'checkbox') {
     $defaultValueShow = $defaultValue ? 'YES' : 'NO';
+} elseif (is_array($defaultValueShow)) {
+    $defaultValueShow = implode(', ', $defaultValueShow);
 }
 
 if ($hasDefault) {
@@ -118,6 +122,20 @@ switch ($inputType) {
             $options = $rawOptions;
         }
 
+        $multiple = $def['multiple'] ?? false;
+
+        if ($multiple) {
+            // Stored value comes from the DB as a raw JSON string; decode it
+            // to an array so Select2 can pre-select the current values.
+            $currentValue = $model->$key;
+            if (is_string($currentValue) && $currentValue !== '') {
+                $decoded = json_decode($currentValue, true);
+                $model->$key = is_array($decoded) ? $decoded : [];
+            } elseif (!is_array($currentValue)) {
+                $model->$key = [];
+            }
+        }
+
         echo $field->widget(Select2::class, [
             'data' => $options,
             'theme' => Select2::THEME_BOOTSTRAP,
@@ -125,14 +143,14 @@ switch ($inputType) {
                 'placeholder' => 'Válassz...',
                 'class' => 'setting-input',
                 'autocomplete' => 'off',
+                'multiple' => $multiple,
             ],
             'pluginOptions' => [
                 'allowClear' => true
             ],
         ])->hint($hint);
         break;
-        
-        
+
     default: // text, email, etc.
         echo $field->input($inputType, [
             'placeholder' => $placeholder,
